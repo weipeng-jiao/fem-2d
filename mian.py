@@ -7,7 +7,9 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 import matplotlib.tri as tri
 import sys
+from solver import Kmat
 
+##前处理部分
 x = [0,0,1,2,2,3,3]
 y = [0,2,3,2,1,1,0]
 
@@ -35,6 +37,12 @@ for i in range(len(t)): #网格标号
     sub.text(centx,centy,'{:d}'.format(i),fontsize=12,color='r')
 sub.triplot(triObj,color='k')#画三角形网格
 plt.show()#显示
+
+
+#求解部分
+KMat(elements, nodes, 200000000000,0.25,1)
+
+
 
 
 

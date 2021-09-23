@@ -1,6 +1,6 @@
 #生成总刚矩阵
 import numpy as np
-def KMat(elements, nodes, E0, v, t):
+def KMat(elements, nodes, E0, v, t):#单元数组 节点数组 弹体模量 泊松比 平面厚度
     n=2*len(nodes)
     Kt=np.zeros((n,n))
     i=0
