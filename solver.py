@@ -117,23 +117,19 @@ def Strain(elements,nodes,U):#获得应变信息
 	
         
 	return strain
-	
-  	
 
-def Stress(B,E0,v):
-        item=E0/(1-v*v)
-	    D=np.zeros([3,3])
-	    #弹性矩阵各元素
-	    D[0][0]=1*item;D[0][1]=v*item;D[0][2]=0
-	    D[1][0]=v*item;D[1][1]=1*item;D[1][2]=0
-	    D[2][0]=0;D[2][1]=0;D[2][2]=((1-v)/2)*item
-	
-        n1=len(B)
-        n2=len(B[0])
-        stress=np.zeros([n1,n2])
-	 
-        for i in range(n1):
-            for j in range(n2):
-		        stress[i][j]=D[j][0]*B[i][0]+D[j][1]*B[i][1]+D[j][2]*B[i][2]
-		
-	return stress
+
+def Stress(B, E0, v):
+    item=E0/(1-v*v)  
+    D=np.zeros([3,3])
+    #弹性矩阵各元素
+    D[0][0]=1*item;D[0][1]=v*item;D[0][2]=0
+    D[1][0]=v*item;D[1][1]=1*item;D[1][2]=0
+    D[2][0]=0;D[2][1]=0;D[2][2]=((1-v)/2)*item
+    n1=len(B)
+    n2=len(B[0])
+    stress=np.zeros([n1,n2])
+    for i in range(n1):
+        for j in range(n2):
+            stress[i][j]=D[j][0]*B[i][0]+D[j][1]*B[i][1]+D[j][2]*B[i][2]
+    return stress
