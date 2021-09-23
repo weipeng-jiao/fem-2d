@@ -41,7 +41,7 @@ def KMat(elements, nodes, E0, v, t):#单元数组 节点数组 弹体模量 泊�
 
 
 
-def solver(Kt, U, F):
+def gauss(Kt, U, F): #总刚度矩阵 位移边界 外力列阵
     #置1法
     i=0
     while i<len(U):
@@ -87,3 +87,53 @@ def solver(Kt, U, F):
         X[i]=(K[i][n]-sum)/K[i][i]
         i=i-1
     return X      
+
+def Strain(elements,nodes,U):#获得应变信息
+    n=len(elements)
+    strain=np.zeros([n,3])
+    
+    for i in range(n):
+        #读取单元节点数信息
+        a=elements[i][0]; b=elements[i][1]; c=elements[i][2]
+        #读取节点坐标信息
+        xi=nodes[a][0]; xj=nodes[b][0]; xm=nodes[c][0]
+        yi=nodes[a][1]; yj=nodes[b][1]; ym=nodes[c][1]
+        #获得A，b，c
+        bi=yj-ym; bj=ym-yi; bm=yi-yj
+        ci=-(xj-xm); cj=-(xm-xi); cm=-(xi-xj)
+        A=(bi*cj-bj*ci)/2 #单元面积
+       
+        B=np.zeros([3,6])
+        B[0][0]=bi/(2*A); B[0][1]=0; B[0][2]=bj/(2*A); B[0][3]=0; B[0][4]=bm/(2*A);B[0][5]=0
+        B[1][0]=0; B[1][1]=ci/(2*A); B[1][2]=0; B[1][3]=cj/(2*A); B[1][4]=0; B[1][5]=cm/(2*A)
+        B[2][0]=ci/(2*A); B[2][1]=bi/(2*A);B[2][2]=cj/(2*A); B[2][3]=bj/(2*A); B[2][4]=cm/(2*A); B[2][5]=bm/(2*A)
+        
+        a1= 2*a-2; a2= 2*a-1
+        b1= 2*b-2; b2= 2*b-1
+        c1= 2*c-2; c2= 2*c-1
+	    
+        for j in range(3): 
+	        strain[i][j]=B[j][0]*U[a1]+B[j][1]*U[a2]+B[j][2]*U[b1]+B[j][3]*U[b2]+B[j][4]*U[c1]+B[j][5]*U[c2]
+	
+        
+	return strain
+	
+  	
+
+def Stress(B,E0,v):
+        item=E0/(1-v*v)
+	    D=np.zeros([3,3])
+	    #弹性矩阵各元素
+	    D[0][0]=1*item;D[0][1]=v*item;D[0][2]=0
+	    D[1][0]=v*item;D[1][1]=1*item;D[1][2]=0
+	    D[2][0]=0;D[2][1]=0;D[2][2]=((1-v)/2)*item
+	
+        n1=len(B)
+        n2=len(B[0])
+        stress=np.zeros([n1,n2])
+	 
+        for i in range(n1):
+            for j in range(n2):
+		        stress[i][j]=D[j][0]*B[i][0]+D[j][1]*B[i][1]+D[j][2]*B[i][2]
+		
+	return stress
