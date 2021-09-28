@@ -2,9 +2,9 @@
 import numpy as np
 def KMat(elements, nodes, E0, v, t):#单元数组 节点数组 弹体模量 泊松比 平面厚度
     n=2*len(nodes)
+    N=len(elements)
     Kt=np.zeros((n,n))
-    i=0
-    while i< n:
+    for i in range(N):
         #读取单元节点数信息
         a=elements[i][0]; b=elements[i][1]; c=elements[i][2];
         #读取节点坐标信息
@@ -15,6 +15,7 @@ def KMat(elements, nodes, E0, v, t):#单元数组 节点数组 弹体模量 泊�
         ci=-(xj-xm); cj=-(xm-xi); cm=-(xi-xj);
         A=(bi*cj-bj*ci)/2 #单元面积
         item=E0*t/(4*(1-v*v)*A) #矩阵前系数
+
         #生成单刚矩阵
         Ke = np.zeros((6 ,6))
         Ke[0][0]=(bi*bi+((1-v)/2)*ci*ci)*item; Ke[0][1]=(v*bi*ci+((1-v)/2)*ci*bi)*item; Ke[0][2]=(bi*bj+((1-v)/2)*ci*cj)*item; Ke[0][3]=(v*bi*cj+((1-v)/2)*ci*bj)*item; Ke[0][4]=(bi*bm+((1-v)/2)*ci*cm)*item; Ke[0][5]=(v*bi*cm+((1-v)/2)*ci*bm)*item;
@@ -27,6 +28,7 @@ def KMat(elements, nodes, E0, v, t):#单元数组 节点数组 弹体模量 泊�
         a1= 2*a; a2= 2*a+1; 
         b1= 2*b; b2= 2*b+1;
         c1= 2*c; c2= 2*c+1;
+      
         #总刚矩阵组装
         Kt[a1][a1]= Kt[a1][a1]+Ke[0][0]; Kt[a1][a2]= Kt[a1][a2]+Ke[0][1]; Kt[a1][b1]= Kt[a1][b1]+Ke[0][2]; Kt[a1][b2]= Kt[a1][b2]+Ke[0][3]; Kt[a1][c1]= Kt[a1][c1]+Ke[0][4]; Kt[a1][c2]= Kt[a1][c2]+Ke[0][5];
         Kt[a2][a1]= Kt[a2][a1]+Ke[1][0]; Kt[a2][a2]= Kt[a2][a2]+Ke[1][1]; Kt[a2][b1]= Kt[a2][b1]+Ke[1][2]; Kt[a2][b2]= Kt[a2][b2]+Ke[1][3]; Kt[a2][c1]= Kt[a2][c1]+Ke[1][4]; Kt[a2][c2]= Kt[a2][c2]+Ke[1][5];
@@ -34,7 +36,8 @@ def KMat(elements, nodes, E0, v, t):#单元数组 节点数组 弹体模量 泊�
         Kt[b2][a1]= Kt[b2][a1]+Ke[3][0]; Kt[b2][a2]= Kt[b2][a2]+Ke[3][1]; Kt[b2][b1]= Kt[b2][b1]+Ke[3][2]; Kt[b2][b2]= Kt[b2][b2]+Ke[3][3]; Kt[b2][c1]= Kt[b2][c1]+Ke[3][4]; Kt[b2][c2]= Kt[b2][c2]+Ke[3][5];
         Kt[c1][a1]= Kt[c1][a1]+Ke[4][0]; Kt[c1][a2]= Kt[c1][a2]+Ke[4][1]; Kt[c1][b1]= Kt[c1][b1]+Ke[4][2]; Kt[c1][b2]= Kt[c1][b2]+Ke[4][3]; Kt[c1][c1]= Kt[c1][c1]+Ke[4][4]; Kt[c1][c2]= Kt[c1][c2]+Ke[4][5];
         Kt[c2][a1]= Kt[c2][a1]+Ke[5][0]; Kt[c2][a2]= Kt[c2][a2]+Ke[5][1]; Kt[c2][b1]= Kt[c2][b1]+Ke[5][2]; Kt[c2][b2]= Kt[c2][b2]+Ke[5][3]; Kt[c2][c1]= Kt[c2][c1]+Ke[5][4]; Kt[c2][c2]= Kt[c2][c2]+Ke[5][5];
-        i=i+1
+      
+    
     return Kt
 
 
@@ -42,28 +45,23 @@ def KMat(elements, nodes, E0, v, t):#单元数组 节点数组 弹体模量 泊�
 
 
 def gauss(Kt, U, F): #总刚度矩阵 位移边界 外力列阵
+    
+    n=len(Kt)
     #置1法
-    i=0
-    while i<len(U):
+    for i in range(len(U)):
         a=2*U[i][0]+U[i][1]
-        j=0
-        while j<len(Kt):
+        for j in range(n):
             Kt[a][j]=0
             Kt[j][a]=0
-            j=j+1
         Kt[a][a]=1
-        i=i+1
     #生成增广矩阵
-    n=2*len(Kt)
+    
+
     K=np.zeros((n,n+1))
-    i=0
-    while i<n:
+    for i in range(n):
         K[i][n]=F[i]
-        j=0
-        while j<n:
+        for j in range(n):
             K[i][j]=Kt[i][j]
-            j=j+1
-        i=i+1
     #高斯消元法
     i=0
     while i<n:
@@ -72,10 +70,11 @@ def gauss(Kt, U, F): #总刚度矩阵 位移边界 外力列阵
             temp =K[k][i]
             j=i
             while j<=n:
-                temp =K[k][i]
+                K[k][j]=K[k][j]-(K[i][j]/K[i][i])*temp
                 j=j+1
             k=k+1
         i=i+1
+
     X=np.zeros(n)
     i=n-1
     while i>=0:
@@ -108,15 +107,13 @@ def Strain(elements,nodes,U):#获得应变信息
         B[1][0]=0; B[1][1]=ci/(2*A); B[1][2]=0; B[1][3]=cj/(2*A); B[1][4]=0; B[1][5]=cm/(2*A)
         B[2][0]=ci/(2*A); B[2][1]=bi/(2*A);B[2][2]=cj/(2*A); B[2][3]=bj/(2*A); B[2][4]=cm/(2*A); B[2][5]=bm/(2*A)
         
-        a1= 2*a-2; a2= 2*a-1
-        b1= 2*b-2; b2= 2*b-1
-        c1= 2*c-2; c2= 2*c-1
+        a1= 2*a; a2= 2*a+1; 
+        b1= 2*b; b2= 2*b+1;
+        c1= 2*c; c2= 2*c+1;
 	    
         for j in range(3): 
 	        strain[i][j]=B[j][0]*U[a1]+B[j][1]*U[a2]+B[j][2]*U[b1]+B[j][3]*U[b2]+B[j][4]*U[c1]+B[j][5]*U[c2]
-	
-        
-	return strain
+    return strain
 
 
 def Stress(B, E0, v):
