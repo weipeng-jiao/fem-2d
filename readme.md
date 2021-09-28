@@ -14,16 +14,16 @@
 * 云图可视化
 
 ### 网格
-<img src="https://github.com/weipeng-jiao/fem-2d/blob/master/mesh.png" alt="matrix" height="280px" width="350px">
+<p align="center"><img src="https://github.com/weipeng-jiao/fem-2d/blob/master/mesh.png" alt="matrix" height="400px" width="600px"></img></p>
 
 ### 约束和荷载
-<img src="https://github.com/weipeng-jiao/fem-2d/blob/master/load.png" alt="matrix" height="280px" width="350px">
+<p align="center"><img src="https://github.com/weipeng-jiao/fem-2d/blob/master/load.png" alt="matrix" height="400px" width="600px"></img></p>
 
 ### 应变云图
-<img src="https://github.com/weipeng-jiao/fem-2d/blob/master/strain.png" alt="matrix" height="280px" width="350px">
+<p align="center"><img src="https://github.com/weipeng-jiao/fem-2d/blob/master/strain.png" alt="matrix" height="800px" width="600px"></img></p>
 
 ### 应力云图
-<img src="https://github.com/weipeng-jiao/fem-2d/blob/master/stress.png" alt="matrix" height="280px" width="350px">
+<<p align="center"><img src="https://github.com/weipeng-jiao/fem-2d/blob/master/stress.png" alt="matrix" height="800px" width="600px"></img></p>
 
 ### 未实现的问题
 - [ ] 凹包网格划分&#x1F611; 
