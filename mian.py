@@ -63,7 +63,7 @@ for i in range(len(elements)): #网格标号
     sub1.text(centx,centy,'{:d}'.format(i),fontsize=12,color='k')
 sub1.triplot(triObj,color='k')#画三角形网格
 
-plt.get_current_fig_manager().window.state('zoomed')
+
 plt.savefig("mesh")
 plt.show()
 
@@ -110,7 +110,7 @@ ylim=[min(y)-0.5*(max(y)-min(y)),max(y)+0.5*(max(y)-min(y))]
 sub1.set_xlim(xlim)
 sub1.set_ylim(ylim)
 
-plt.get_current_fig_manager().window.state('zoomed')
+
 plt.savefig("load")
 plt.show()
 
@@ -186,7 +186,7 @@ sub3.set_xlim([min(x)-0.5*(max(x)-min(x)),max(x)+0.5*(max(x)-min(x))])
 sub3.set_ylim([min(y)-0.5*(max(y)-min(y)),max(y)+0.5*(max(y)-min(y))])
 
 
-plt.get_current_fig_manager().window.state('zoomed')
+
 plt.savefig("strain")
 plt.show()
 
@@ -253,7 +253,7 @@ sub3.set_ylim([min(y)-0.5*(max(y)-min(y)),max(y)+0.5*(max(y)-min(y))])
 
 
 
-plt.get_current_fig_manager().window.state('zoomed')
+
 plt.savefig("stress")
 plt.show()
 
